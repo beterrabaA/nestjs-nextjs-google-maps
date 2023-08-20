@@ -8,6 +8,7 @@ import type {
   DirectionsResponseData,
   FindPlaceFromTextResponseData,
 } from '@googlemaps/google-maps-services-js'
+import { socket } from '@/utils/socket-io'
 
 const NewRoutePage = () => {
   const [inputValues, setInputValues] = useState({
@@ -88,8 +89,10 @@ const NewRoutePage = () => {
     for (const step of steps) {
       await sleep(2000)
       moveCar(step.start_location)
+      emitNewPoint(data.id, step.start_location)
       await sleep(2000)
       moveCar(step.end_location)
+      emitNewPoint(data.id, step.end_location)
     }
   }
 
@@ -100,6 +103,13 @@ const NewRoutePage = () => {
     })
   }
 
+  const emitNewPoint = (routeId: string, point: google.maps.LatLngLiteral) => {
+    socket.emit('new-points', {
+      route_id: routeId,
+      lat: point.lat,
+      lng: point.lng,
+    })
+  }
   return (
     <div className="flex flex-row h-full">
       <div>
