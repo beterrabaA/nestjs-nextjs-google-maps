@@ -18,8 +18,8 @@ export default function AdminPage() {
 
   const subscribeRoute = useCallback(
     async (routeId: string) => {
-      console.log(routeId)
-      const response = await fetch(`http://localhost:3000/routes/${routeId}`)
+      const baseUrl = process.env.NEXT_PUBLIC_API_ROUTE
+      const response = await fetch(`${baseUrl}/routes/${routeId}`)
       const route = await response.json()
       map!.removeRoute(routeId!)
       map!.addRouteWithIcons({
@@ -46,7 +46,6 @@ export default function AdminPage() {
     socket.on(
       'admin-new-point',
       async (data: { route_id: string; lat: number; lng: number }) => {
-        console.log(data)
         if (!map!.hasRoute(data.route_id)) {
           await subscribeRoute(data.route_id)
         }
