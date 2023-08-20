@@ -29,10 +29,9 @@ const NewRoutePage = () => {
   const searchPlaces = async (event: FormEvent) => {
     event.preventDefault()
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_ROUTE
     const [sourceResponse, destResponse] = await Promise.all([
-      axios.get(`${baseUrl}/places?text=${inputValues.source}`),
-      axios.get(`${baseUrl}/places?text=${inputValues.destination}`),
+      axios.get(`/api/places?text=${inputValues.source}`),
+      axios.get(`/api/places?text=${inputValues.destination}`),
     ])
 
     if (sourceResponse.statusText !== 'OK') {
@@ -54,7 +53,7 @@ const NewRoutePage = () => {
     })
 
     const directionsReq = await axios.get(
-      `${baseUrl}/directions?${queryParams.toString()}`,
+      `/api/directions?${queryParams.toString()}`,
     )
 
     const directionsResponseData: DirectionsResponseData & { request: any } =
